@@ -1,0 +1,33 @@
+@SpringBootTest
+class PedidoMapperSpringTest {
+
+    @Autowired
+    private PedidoMapper pedidoMapper;
+
+    @Test
+    void deveMapearNovoPedidoDtoParaPedido() {
+        // Arrange
+        var itens = List.of(
+                new ItemPedidoDTO(1L, 2, new BigDecimal("10.50"), "Produto A"),
+                new ItemPedidoDTO(2L, 1, new BigDecimal("5.00"), "Produto B")
+        );
+        var dadosPagamento = new DadosPagamentoDTO("CARTAO", "1234567890123456");
+
+        var dto = new NovoPedidoDTO(itens, dadosPagamento);
+
+        // Act
+        Pedido pedido = pedidoMapper.map(dto);
+
+        // Assert
+        assertNotNull(pedido);
+        assertEquals(2, pedido.getItens().size());
+        assertEquals(StatusPedido.REALIZADO, pedido.getStatus());
+        assertNotNull(pedido.getDataPedido());
+
+        // Total esperado: (2 * 10.50) + (1 * 5.00) = 21.00 + 5.00 = 26.00
+        assertEquals(new BigDecimal("26.00"), pedido.getTotal());
+
+        // Garantir que os itens ficaram vinculados ao pedido
+        assertTrue(pedido.getItens().stream().allMatch(i -> i.getPedido() == pedido));
+    }
+}

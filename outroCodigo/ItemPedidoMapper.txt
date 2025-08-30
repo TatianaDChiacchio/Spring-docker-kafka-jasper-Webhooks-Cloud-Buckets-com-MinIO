@@ -1,0 +1,4 @@
+@Mapper(componentModel = "spring")
+public interface ItemPedidoMapper {
+    ItemPedido map(ItemPedidoDTO dto);
+}

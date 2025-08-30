@@ -1,0 +1,4 @@
+@Mapper(componentModel = "spring")
+public interface DadosPagamentoMapper {
+    DadosPagamento map(DadosPagamentoDTO dto);
+}

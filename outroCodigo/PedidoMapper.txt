@@ -1,0 +1,27 @@
+@Mapper(
+    componentModel = "spring",
+    uses = { ItemPedidoMapper.class, DadosPagamentoMapper.class }
+)
+public interface PedidoMapper {
+
+    Pedido map(NovoPedidoDTO dto);
+
+    @AfterMapping
+    default void afterMapping(@MappingTarget Pedido pedido) {
+        pedido.setStatus(StatusPedido.REALIZADO);
+        pedido.setDataPedido(LocalDateTime.now());
+
+        var total = calcularTotal(pedido);
+        pedido.setTotal(total);
+
+        pedido.getItens().forEach(item -> item.setPedido(pedido));
+    }
+
+    private static BigDecimal calcularTotal(Pedido pedido) {
+        return pedido.getItens().stream()
+                .map(item -> item.getValorUnitario()
+                        .multiply(BigDecimal.valueOf(item.getQuantidade())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .abs();
+    }
+}

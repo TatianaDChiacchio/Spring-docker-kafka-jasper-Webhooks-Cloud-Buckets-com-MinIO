@@ -1,0 +1,6 @@
+public record ItemPedidoDTO(
+    Long codigoProduto,
+    Integer quantidade,
+    BigDecimal valorUnitario,
+    String nome
+) {}

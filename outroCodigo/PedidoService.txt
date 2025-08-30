@@ -1,0 +1,13 @@
+@Service
+@RequiredArgsConstructor
+public class PedidoService {
+
+    private final PedidoRepository pedidoRepository;
+    private final PedidoMapper pedidoMapper;
+
+    public Pedido criarPedido(NovoPedidoDTO dto) {
+        Pedido pedido = pedidoMapper.map(dto);
+        // Persistir no banco
+        return pedidoRepository.save(pedido);
+    }
+}

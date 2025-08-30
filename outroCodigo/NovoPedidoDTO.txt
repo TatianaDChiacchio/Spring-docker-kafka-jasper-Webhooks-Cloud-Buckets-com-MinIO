@@ -1,0 +1,4 @@
+public record NovoPedidoDTO(
+    List<ItemPedidoDTO> itens,
+    DadosPagamentoDTO dadosPagamento
+) {}

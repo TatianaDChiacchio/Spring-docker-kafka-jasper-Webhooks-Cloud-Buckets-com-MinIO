@@ -1,0 +1,4 @@
+public record DadosPagamentoDTO(
+    String formaPagamento,
+    String numeroCartao
+) {}

@@ -1,0 +1,55 @@
+@SpringBootTest
+@AutoConfigureMockMvc
+@TestPropertySource(properties = {
+    "spring.datasource.url=jdbc:h2:mem:testdb",
+    "spring.jpa.hibernate.ddl-auto=create-drop"
+})
+class PedidoControllerPersistenceTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    @Test
+    void deveCriarEPersistirPedido() throws Exception {
+        String json = """
+            {
+              "itens": [
+                {
+                  "codigoProduto": 1,
+                  "quantidade": 2,
+                  "valorUnitario": 10.50,
+                  "nome": "Produto A"
+                },
+                {
+                  "codigoProduto": 2,
+                  "quantidade": 1,
+                  "valorUnitario": 5.00,
+                  "nome": "Produto B"
+                }
+              ],
+              "dadosPagamento": {
+                "formaPagamento": "CARTAO",
+                "numeroCartao": "1234567890123456"
+              }
+            }
+            """;
+
+        mockMvc.perform(post("/pedidos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.itens.length()").value(2))
+            .andExpect(jsonPath("$.status").value("REALIZADO"))
+            .andExpect(jsonPath("$.total").value(26.00));
+
+        // Verificar se o pedido foi realmente persistido no banco
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        assertEquals(1, pedidos.size());
+        Pedido pedidoSalvo = pedidos.get(0);
+        assertEquals(new BigDecimal("26.00"), pedidoSalvo.getTotal());
+        assertEquals(2, pedidoSalvo.getItens().size());
+    }
+}

@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: pedidos
+  datasource:
+    url: jdbc:postgresql://localhost:5555/icompraspedidos
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    bootstrap-servers: 'http://localhost:29092'
+    consumer:
+      group-id: icompras-atualizacao-pedido
+      auto-offset-reset: earliest
+server:
+  port: 8080
+
+icompras:
+  pedidos:
+    clients:
+      produtos:
+        url: 'http://localhost:8081/produtos'
+      clientes:
+        url: 'http://localhost:8082/clientes'
+  config:
+    kafka:
+      server-url: 'http://localhost:29092'
+      topics:
+        pedidos-pagos: 'icompras.pedidos-pagos'
+        pedidos-faturados: 'icompras.pedidos-faturados'
+        pedidos-enviados: 'icompras.pedidos-enviados'

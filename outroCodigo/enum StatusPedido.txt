@@ -1,0 +1,5 @@
+public enum StatusPedido {
+    REALIZADO,
+    PENDENTE,
+    CANCELADO
+}

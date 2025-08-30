@@ -1,0 +1,13 @@
+@RestController
+@RequestMapping("/pedidos")
+@RequiredArgsConstructor
+public class PedidoController {
+
+    private final PedidoService pedidoService;
+
+    @PostMapping
+    public ResponseEntity<Pedido> criarPedido(@RequestBody NovoPedidoDTO dto) {
+        Pedido pedidoSalvo = pedidoService.criarPedido(dto);
+        return ResponseEntity.ok(pedidoSalvo);
+    }
+}

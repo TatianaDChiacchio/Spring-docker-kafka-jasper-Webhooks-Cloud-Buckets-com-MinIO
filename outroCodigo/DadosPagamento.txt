@@ -1,0 +1,9 @@
+@Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class DadosPagamento {
+    private String formaPagamento;
+    private String numeroCartao;
+}

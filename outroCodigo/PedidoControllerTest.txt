@@ -1,0 +1,41 @@
+@SpringBootTest
+@AutoConfigureMockMvc
+class PedidoControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void deveCriarPedidoComSucesso() throws Exception {
+        String json = """
+            {
+              "itens": [
+                {
+                  "codigoProduto": 1,
+                  "quantidade": 2,
+                  "valorUnitario": 10.50,
+                  "nome": "Produto A"
+                },
+                {
+                  "codigoProduto": 2,
+                  "quantidade": 1,
+                  "valorUnitario": 5.00,
+                  "nome": "Produto B"
+                }
+              ],
+              "dadosPagamento": {
+                "formaPagamento": "CARTAO",
+                "numeroCartao": "1234567890123456"
+              }
+            }
+            """;
+
+        mockMvc.perform(post("/pedidos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.itens.length()").value(2))
+            .andExpect(jsonPath("$.status").value("REALIZADO"))
+            .andExpect(jsonPath("$.total").value(26.00));
+    }
+}

@@ -1,0 +1,24 @@
+@Entity
+@Table(name = "pedido")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Pedido {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long codigo;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemPedido> itens = new ArrayList<>();
+
+    @Embedded
+    private DadosPagamento dadosPagamento;
+
+    private BigDecimal total;
+
+    private LocalDateTime dataPedido;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPedido status;
+}
